@@ -13,6 +13,7 @@
     "live-reload": "^1.1.0",
     "node-sass": "^3.4.2",
     "parallelshell": "^2.0.0",
+    "promise-polyfill": "^4.0.3",
     "raw-loader": "^0.5.1",
     "smoothscroll": "^0.2.2",
     "watch": "^0.17.1",
