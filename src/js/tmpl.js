@@ -1,16 +1,26 @@
 class TMPL {
     constructor(params) {
-        //console.log('params', params);
         this.params = params;
-        this.name = 'Poke!';
     }
 
-    html(data, data2){
-        console.log(data, data2);
-        return data[0] + data2 + data[1];
-    }
     render() {
-        return `<div>${this.params.map(el => this.html`<h3>${el.name}</h3>`)}</div>`;
+        return `<div class='poke-list'>
+                    ${this.params.map(el => `
+                        <div class='poke-list__item'>
+                            <div class='poke-list__item__img'>
+                                <img src='http://pokeapi.co/media/img/${el.pkdx_id}.png' />
+                            </div>
+                            <h3 class='poke-list__item__title'>${el.name}</h3>
+                            <div class='poke-list__item__types type-list'>
+                                ${ el.types.map(type => `
+                                    <span class='type-list__item'>${type.name}</span>
+                                `).join('') }
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class='more' id='morePoke'>Load More</button>
+                `;
     }
 }
 export default TMPL;

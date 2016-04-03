@@ -50,19 +50,34 @@
 
 	var _ajax2 = _interopRequireDefault(_ajax);
 
+	var _helpers = __webpack_require__(6);
+
+	var _helpers2 = _interopRequireDefault(_helpers);
+
 	var _tmpl = __webpack_require__(5);
 
 	var _tmpl2 = _interopRequireDefault(_tmpl);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var url = 'http://pokeapi.co/api/v1/pokemon/?limit=12';
+	var url = 'http://pokeapi.co/api/v1/pokemon/?limit=12&offset=0';
 
+	window.addEventListener('popstate', function (event) {
+	    updateContent(event.state);
+	});
+
+	console.log('qqqqq');
+
+	console.log(new _helpers2.default().getUrl('offset'));
 	//document.getElementById('app').innerHTML = new HTML().render();
 
 	_ajax2.default.getList(url).then(function (val) {
 	    document.getElementById('app').innerHTML = new _tmpl2.default(val.objects).render();
-	    console.log('-->', val.objects[0]);
+
+	    document.getElementById('morePoke').addEventListener('click', function (event) {
+	        console.log('click');
+	        history.pushState({ 'page_id': 1 }, '', '/page/2');
+	    }, false);
 	}, function (val) {
 	    console.log('ERROR -->', val);
 	});
@@ -547,35 +562,23 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _templateObject = _taggedTemplateLiteral(['<h3>', '</h3>'], ['<h3>', '</h3>']);
-
-	function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var TMPL = function () {
 	    function TMPL(params) {
 	        _classCallCheck(this, TMPL);
 
-	        //console.log('params', params);
 	        this.params = params;
-	        this.name = 'Poke!';
 	    }
 
 	    _createClass(TMPL, [{
-	        key: 'html',
-	        value: function html(data, data2) {
-	            console.log(data, data2);
-	            return data[0] + data2 + data[1];
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this = this;
-
-	            return '<div>' + this.params.map(function (el) {
-	                return _this.html(_templateObject, el.name);
-	            }) + '</div>';
+	            return '<div class=\'poke-list\'>\n                    ' + this.params.map(function (el) {
+	                return '\n                        <div class=\'poke-list__item\'>\n                            <div class=\'poke-list__item__img\'>\n                                <img src=\'http://pokeapi.co/media/img/' + el.pkdx_id + '.png\' />\n                            </div>\n                            <h3 class=\'poke-list__item__title\'>' + el.name + '</h3>\n                            <div class=\'poke-list__item__types type-list\'>\n                                ' + el.types.map(function (type) {
+	                    return '\n                                    <span class=\'type-list__item\'>' + type.name + '</span>\n                                ';
+	                }).join('') + '\n                            </div>\n                        </div>\n                    ';
+	            }).join('') + '\n                </div>\n                <button class=\'more\' id=\'morePoke\'>Load More</button>\n                ';
 	        }
 	    }]);
 
@@ -583,6 +586,43 @@
 	}();
 
 	exports.default = TMPL;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Helpers = function () {
+	    function Helpers() {
+	        _classCallCheck(this, Helpers);
+	    }
+
+	    _createClass(Helpers, [{
+	        key: "getUrl",
+	        value: function getUrl(name, url) {
+	            if (!url) url = window.location.href;
+	            name = name.replace(/[\[\]]/g, "\\$&");
+	            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+	                results = regex.exec(url);
+	            if (!results) return null;
+	            if (!results[2]) return '';
+	            return decodeURIComponent(results[2].replace(/\+/g, " "));
+	        }
+	    }]);
+
+	    return Helpers;
+	}();
+
+	exports.default = Helpers;
 
 /***/ }
 /******/ ]);
