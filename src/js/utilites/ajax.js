@@ -1,9 +1,9 @@
 import Promise from 'promise-polyfill';
+
 class PokeApi {
-    constructor () {
+    constructor (params) {
         console.log('[PokeApi] Constructor');
     }
-
     getList (url) {
         console.log(url);
         return new Promise(
@@ -26,4 +26,4 @@ class PokeApi {
 
 }
 
-export default new PokeApi();
+export default PokeApi;

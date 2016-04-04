@@ -1,32 +1,41 @@
-import PokeApi from './utilites/ajax';
-import Helpers from './utilites/helpers';
-import HTML from './tmpl.js';
-
-var url = 'http://pokeapi.co/api/v1/pokemon/?limit=12&offset=0';
+//import Helpers from './utilites/helpers';
+import PokeList from './components/PokePage';
 
 
-window.addEventListener('popstate', function(event) {
-  updateContent(event.state)
+
+new PokePage({
+    id: 'app',
+    page: 0
 });
 
-console.log('qqqqq');
+// class PokeList {
+//     constructor () {
+//         this.page = 0;
+//     }
+//     create () {
+//
+//         PokeApi.getList(url+'&offset='+this.page).then(
+//             (val) => {
+//                 document.getElementById('app').innerHTML = new HTML(val.objects).render();
+//                 document.getElementById('morePoke').addEventListener('click', (event) => {
+//                     this.page++;
+//                     PokeApi.getList(url+'&offset='+this.page).then(
+//                         (val) => {
+//                             document.getElementById('app').innerHTML = new HTML(val.objects).render();
+//                         },
+//                         (val) => {
+//                             console.log('ERROR -->', val);
+//                         }
+//                     );
+//                 }, false);
+//             },
+//             (val) => {
+//                 console.log('ERROR -->', val);
+//             }
+//         );
+//
+//
+//     }
+// }
 
-
-console.log( new Helpers().getUrl('offset'));
-//document.getElementById('app').innerHTML = new HTML().render();
-
-PokeApi.getList(url).then(
-    (val) => {
-        document.getElementById('app').innerHTML = new HTML(val.objects).render();
-
-        document.getElementById('morePoke').addEventListener('click', (event) => {
-            console.log('click');
-            history.pushState({'page_id': 1}, '', '/page/2');
-
-        }, false);
-
-    },
-    (val) => {
-        console.log('ERROR -->', val);
-    }
-);
+//new PokeList().create();
