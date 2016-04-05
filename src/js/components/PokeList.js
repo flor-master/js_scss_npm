@@ -1,5 +1,5 @@
 import PokeApi from '../utilites/ajax';
-import TypeList from './TypeList.js';
+//import TypeList from './TypeList.js';
 
 class PokeList extends PokeApi{
 
@@ -21,6 +21,7 @@ class PokeList extends PokeApi{
                 console.log('ERROR!', val);
             }
         )
+        //${  new TypeList(el.types).render() }
     }
     render(data) {
         return `
@@ -30,9 +31,9 @@ class PokeList extends PokeApi{
                             <img src='http://pokeapi.co/media/img/${el.pkdx_id}.png' />
                         </div>
                         <h3 class='poke-list__item__title'>${el.name}</h3>
-                        ${  new TypeList(el.types).render() }
+
                     </div>
-                `).join('')}    
+                `).join('')}
                 `;
     }
 }

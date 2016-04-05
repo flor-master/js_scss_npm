@@ -58,3 +58,14 @@ h1 {
   border: #1a94d1 solid 1px; }
   .more:hover {
     background: #1a94d1; }
+  .more:disabled {
+    cursor: auto;
+    opacity: .7; }
+    .more:disabled:hover {
+      background: #38ACE6; }
+  .more svg {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 4px;
+    right: -7px; }

@@ -67,5 +67,18 @@ h1{
     &:hover{
         background: darken(#38ACE6, 10%);
     }
-
+    &:disabled{
+        cursor: auto;
+        opacity: .7;
+        &:hover{
+            background: #38ACE6;
+        }
+    }
+    svg{
+        width: 20px;
+        height: 20px;
+        position: relative;
+        top: 4px;
+        right: -7px;
+    }
 }
