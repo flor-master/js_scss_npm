@@ -69,3 +69,11 @@ h1 {
     position: relative;
     top: 4px;
     right: -7px; }
+
+.poke-wr {
+  display: flex; }
+
+.poke-detail {
+  max-width: 320px; }
+  .poke-detail__item {
+    width: 320px; }

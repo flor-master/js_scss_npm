@@ -82,3 +82,13 @@ h1{
         right: -7px;
     }
 }
+
+.poke-wr{
+    display: flex;
+}
+.poke-detail{
+    max-width: 320px;
+    &__item{
+        width: 320px;
+    }
+}

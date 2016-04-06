@@ -55,40 +55,7 @@
 	new _PokePage2.default({
 	    id: 'app',
 	    page: 0
-	}).render();
-
-	// class PokeList {
-	//     constructor () {
-	//         this.page = 0;
-	//     }
-	//     create () {
-	//
-	//         PokeApi.getList(url+'&offset='+this.page).then(
-	//             (val) => {
-	//                 document.getElementById('app').innerHTML = new HTML(val.objects).render();
-	//                 document.getElementById('morePoke').addEventListener('click', (event) => {
-	//                     this.page++;
-	//                     PokeApi.getList(url+'&offset='+this.page).then(
-	//                         (val) => {
-	//                             document.getElementById('app').innerHTML = new HTML(val.objects).render();
-	//                         },
-	//                         (val) => {
-	//                             console.log('ERROR -->', val);
-	//                         }
-	//                     );
-	//                 }, false);
-	//             },
-	//             (val) => {
-	//                 console.log('ERROR -->', val);
-	//             }
-	//         );
-	//
-	//
-	//     }
-	// }
-
-	//new PokeList().create();
-	//import Helpers from './utilites/helpers';
+	}).render(); //import Helpers from './utilites/helpers';
 
 /***/ },
 /* 1 */
@@ -124,6 +91,7 @@
 	            var _this = this;
 
 	            document.getElementById(this.params.id).innerHTML = this.tmpl();
+
 	            document.getElementById('more-poke').addEventListener('click', function (event) {
 	                document.getElementById('more-poke').disabled = true;
 	                _this.params.page++;
@@ -133,7 +101,7 @@
 	    }, {
 	        key: 'tmpl',
 	        value: function tmpl() {
-	            return '\n            <div class=\'poke-list\' id=\'poke-list\'>\n                ' + this.pokeList.render() + '\n            </div>\n            <button class=\'more\' id=\'more-poke\' disabled>Load More</button>\n        ';
+	            return '\n            <div class=\'poke-wr\'>\n                <div class=\'poke-list\' id=\'poke-list\'>\n                    ' + this.pokeList.render() + '\n                </div>\n                <div class=\'poke-detail\' id=\'poke-detail\'></div>\n            </div>\n            <button class=\'more\' id=\'more-poke\' disabled>Load More</button>\n        ';
 	        }
 	    }]);
 
@@ -163,6 +131,10 @@
 	var _TypeList = __webpack_require__(7);
 
 	var _TypeList2 = _interopRequireDefault(_TypeList);
+
+	var _PokeDetail = __webpack_require__(8);
+
+	var _PokeDetail2 = _interopRequireDefault(_PokeDetail);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -195,16 +167,27 @@
 	                document.getElementById('more-poke').insertAdjacentHTML('beforeend', this.loader());
 	            }
 	            _get(Object.getPrototypeOf(PokeList.prototype), 'getList', this).call(this, this.url + '&offset=' + this.params.page * this.limit).then(function (val) {
-	                console.log('SUCCESS', val);
-	                if (_this2.params.page == 0) {
-	                    document.getElementById('poke-list').innerHTML = _this2.tmpl(val.objects);
-	                } else {
-	                    document.getElementById('poke-list').insertAdjacentHTML('beforeend', _this2.tmpl(val.objects));
-	                    document.getElementById('more-poke').removeChild(document.getElementById('svg'));
-	                }
-	                document.getElementById('more-poke').disabled = false;
+	                _this2.dataLoad(val);
 	            }, function (val) {
 	                console.log('ERROR!', val);
+	            });
+	        }
+	    }, {
+	        key: 'dataLoad',
+	        value: function dataLoad(val) {
+	            console.log('SUCCESS', val);
+	            if (this.params.page == 0) {
+	                document.getElementById('poke-list').innerHTML = this.tmpl(val.objects);
+	            } else {
+	                document.getElementById('poke-list').insertAdjacentHTML('beforeend', this.tmpl(val.objects));
+	                document.getElementById('more-poke').removeChild(document.getElementById('svg'));
+	            }
+	            document.getElementById('more-poke').disabled = false;
+	            var p = Array.prototype.slice.call(document.getElementsByClassName("poke-list__item"));
+	            p.map(function (el) {
+	                el.addEventListener('click', function (event) {
+	                    new _PokeDetail2.default({ id: event.currentTarget.getAttribute('data-id') }).render();
+	                });
 	            });
 	        }
 	    }, {
@@ -222,7 +205,7 @@
 	        key: 'tmpl',
 	        value: function tmpl(data) {
 	            return '\n            ' + data.map(function (el) {
-	                return '\n                <div class=\'poke-list__item\'>\n                    <div class=\'poke-list__item__img\'>\n                        <img src=\'http://pokeapi.co/media/img/' + el.pkdx_id + '.png\' />\n                    </div>\n                    <h3 class=\'poke-list__item__title\'>' + el.name + '</h3>\n                    ' + new _TypeList2.default(el.types).render() + '\n                </div>\n            ';
+	                return '\n                <div class=\'poke-list__item\' data-id=\'' + el.pkdx_id + '\'>\n                    <div class=\'poke-list__item__img\'>\n                        <img src=\'http://pokeapi.co/media/img/' + el.pkdx_id + '.png\' />\n                    </div>\n                    <h3 class=\'poke-list__item__title\'>' + el.name + '</h3>\n                    ' + new _TypeList2.default(el.types).render() + '\n                </div>\n            ';
 	            }).join('') + '\n        ';
 	        }
 	    }]);
@@ -734,6 +717,68 @@
 	}();
 
 	exports.default = TypeList;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _ajax = __webpack_require__(3);
+
+	var _ajax2 = _interopRequireDefault(_ajax);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PokeDetail = function (_PokeApi) {
+	    _inherits(PokeDetail, _PokeApi);
+
+	    function PokeDetail(params) {
+	        _classCallCheck(this, PokeDetail);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PokeDetail).call(this, params));
+
+	        _this.params = params;
+	        _this.url = 'http://pokeapi.co/api/v1/pokemon';
+	        return _this;
+	    }
+
+	    _createClass(PokeDetail, [{
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            _get(Object.getPrototypeOf(PokeDetail.prototype), 'getList', this).call(this, this.url + '/' + this.params.id).then(function (val) {
+	                document.getElementById('poke-detail').innerHTML = _this2.tmpl(val);
+	            }, function (val) {
+	                console.log('ERROR!', val);
+	            });
+	        }
+	    }, {
+	        key: 'tmpl',
+	        value: function tmpl(poke) {
+	            return '\n            <div class=\'poke-detail__item\'>\n                <div class=\'poke-detail__item__img\'>\n                    <img src=\'http://pokeapi.co/media/img/' + poke.pkdx_id + '.png\' />\n                </div>\n\n            </div>\n        ';
+	        }
+	    }]);
+
+	    return PokeDetail;
+	}(_ajax2.default);
+
+	exports.default = PokeDetail;
 
 /***/ }
 /******/ ]);
